@@ -1,9 +1,11 @@
 import { useState } from 'react'
 import './App.css'
 import { Html5Qrcode } from 'html5-qrcode'
+import QRCode from 'qrcode'
 
 function App() {
   const [qrMessage, setQrMessage] = useState('')
+  const [qrCodeImage, setQrCodeImage] = useState('')
 
   const handleUpload = async (event) => {
     try {
@@ -18,6 +20,12 @@ function App() {
     }
   }
 
+  const generateQRCode = async () => {
+    const code = await QRCode.toDataURL(qrMessage)
+
+    setQrCodeImage(code)
+  }
+
   return (
     <>
       <h1>Test</h1>
@@ -25,7 +33,11 @@ function App() {
         <div id="reader"></div>
         <input type="file" id="qr-input-file" accept="image/*" onChange={handleUpload} />
 
+        { qrMessage && <button onClick={generateQRCode}>Generate QR Code</button> }
+
         <p>{ qrMessage }</p>
+
+        { qrCodeImage && <img src={qrCodeImage} alt="QR Code" /> }
       </div>
     </>
   )
